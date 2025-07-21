@@ -1,22 +1,12 @@
-import requests
+from chembl_webresource_client.new_client import new_client
 import sys
 
 
 def main():
-    chembl_api = 'https://www.ebi.ac.uk/chembl/api/data'
-    s = requests.Session()
+    molecule = new_client.molecule
 
-    drug_name = 'metformin'
-
-    params = {
-        'q': drug_name,
-        'pref_name__icontains': drug_name,
-    }
-
-    resp = s.get(f'{chembl_api}/molecule/search.json', params=params)
-    data = resp.json()
-
-    print([d['pref_name'] for d in data['molecules']])
+    mols = molecule.filter(pref_name__icontains='metformin').only('pref_name')
+    print([m['pref_name'] for m in mols])
 
     return 0
 
